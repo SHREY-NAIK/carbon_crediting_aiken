@@ -1,0 +1,14 @@
+{
+  "preamble": {
+    "title": "shrey/carbon_crediting",
+    "description": "Aiken contracts for project 'shrey/carbon_crediting'",
+    "version": "0.0.0",
+    "plutusVersion": "v3",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.1.4+79d0e45"
+    },
+    "license": "Apache-2.0"
+  },
+  "validators": []
+}

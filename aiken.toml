@@ -1,0 +1,22 @@
+name = "shrey/carbon_crediting"
+version = "0.0.0"
+compiler = "v1.1.4"
+plutus = "v3"
+license = "Apache-2.0"
+description = "Aiken contracts for project 'shrey/carbon_crediting'"
+
+[repository]
+user = "shrey"
+project = "carbon_crediting"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "v2.2.0"
+source = "github"
+
+[config]
+
+[config.default]
+carbon_token = "CARBON_TOKEN"
+

@@ -28,25 +28,13 @@ pub fn validate_spend_campaign(
   expect Script(self_script) = address.payment_credential
 
   when (datum, cc_action) is {
-    // Register Customer:
+    // Register-related actions:
     (Some(current_datum), Register) ->
       if current_datum is CustomerDatum {
         tx |> validate_register_customer(current_datum, creator, customer)
-      } else {
-        fail @"Invalid Customer Datum Type! Must be CustomerDatum"
-      }
-    // Register Verifier:
-    (Some(current_datum), Register) ->
-      if current_datum is verifier_datum: VerifierDatum {
-        tx
-          |> validate_register_verifier(verifier_datum, creator, verifier)
-      } else {
-        fail @"Invalid Verifier Datum Type! Must be VerifierDatum"
-      }
-
-    // Register Credit_holder:
-    (Some(current_datum), Register) ->
-      if current_datum is creditholder_datum: CreditHolderDatum {
+      } else if current_datum is verifier_datum: VerifierDatum {
+        tx |> validate_register_verifier(verifier_datum, creator, verifier)
+      } else if current_datum is creditholder_datum: CreditHolderDatum {
         tx
           |> validate_register_credit_holder(
               creditholder_datum,
@@ -54,16 +42,19 @@ pub fn validate_spend_campaign(
               creditHolder,
             )
       } else {
-        fail @"Invalid CreditHolder Datum Type! Must be CreditHolderDatum"
+        fail @"Invalid Datum Type! Must be CustomerDatum, VerifierDatum, or CreditHolderDatum"
       }
 
-    //if datum customer action purchase
+    // Purchase action:
     (Some(current_datum), Purchase) ->
       if current_datum is customer_datum: CustomerDatum {
         tx |> validate_purchase(customer_datum, customer, verifier)
       } else {
         fail @"Invalid Customer Datum Type! Must be CustomerDatum"
       }
+
+    // Catch-all for unhandled patterns:
+    _ -> fail @"Unsupported action or missing datum"
   }
 }
 

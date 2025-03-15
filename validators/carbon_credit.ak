@@ -3,15 +3,15 @@ use cardano/assets.{PolicyId}
 use cardano/transaction.{OutputReference, Transaction}
 use cc
 use cc/types.{
-  CCRedeemer, CreatorDatum, CreatorDatum, CustomerDatum, VerifierDatum,
+  CCRedeemer, CreatorDatum, CreditHolderDatum, CustomerDatum, VerifierDatum,
 }
 
-validator campaign(
+validator carbon_crediting(
   customer: VerificationKeyHash,
   creator: VerificationKeyHash,
-  nonce: OutputReference,
   verifier: VerificationKeyHash,
   creditHolder: VerificationKeyHash,
+  self_script: PolicyId,
 ) {
   spend(
     datum: Option<Data>,
@@ -19,26 +19,26 @@ validator campaign(
     o_ref: OutputReference,
     tx: Transaction,
   ) {
-    crowdfunding.validate_spend_campaign(
-      self_script,
-      customer,
+    cc.validate_spend_cc(
+      creator,
       verifier,
       creditHolder,
-      creator,
+      customer,
       datum,
       redeemer,
+      self_script,
       o_ref,
       tx,
     )
   }
 
-  mint(datum: Option<Data>, policy_id self_script: PolicyId, tx: Transaction) {
-    crowdfunding.validate_mint_campaign(
+  mint(datum: Option<Data>, redeemer: CCRedeemer, tx: Transaction) {
+    cc.validate_mint_cc(
       customer,
+      creator,
       verifier,
       creditHolder,
-      creator,
-      nonce,
+      redeemer,
       datum,
       self_script,
       tx,
